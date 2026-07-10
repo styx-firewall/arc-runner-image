@@ -3,7 +3,7 @@ FROM ubuntu:26.04 AS build
 ARG TARGETOS
 ARG TARGETARCH
 ARG RUNNER_VERSION=2.334.0
-ARG RUNNER_CONTAINER_HOOKS_VERSION=0.7.0
+#ARG RUNNER_CONTAINER_HOOKS_VERSION=0.7.0
 ARG DOCKER_VERSION=29.6.1
 ARG BUILDX_VERSION=0.35.0
 
@@ -17,9 +17,9 @@ RUN export RUNNER_ARCH=${TARGETARCH} \
     && tar xzf ./runner.tar.gz \
     && rm runner.tar.gz
 
-RUN curl -f -L -o runner-container-hooks.zip https://github.com/actions/runner-container-hooks/releases/download/v${RUNNER_CONTAINER_HOOKS_VERSION}/actions-runner-hooks-k8s-${RUNNER_CONTAINER_HOOKS_VERSION}.zip \
-    && unzip ./runner-container-hooks.zip -d ./k8s \
-    && rm runner-container-hooks.zip
+#RUN curl -f -L -o runner-container-hooks.zip https://github.com/actions/runner-container-hooks/releases/download/v${RUNNER_CONTAINER_HOOKS_VERSION}/actions-runner-hooks-k8s-${RUNNER_CONTAINER_HOOKS_VERSION}.zip \
+#    && unzip ./runner-container-hooks.zip -d ./k8s \
+#    && rm runner-container-hooks.zip
 
 RUN export RUNNER_ARCH=${TARGETARCH} \
     && if [ "$RUNNER_ARCH" = "amd64" ]; then export DOCKER_ARCH=x86_64 ; fi \

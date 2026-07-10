@@ -16,4 +16,5 @@ if [ -S /var/run/docker.sock ]; then
   echo "Docker listo."
 fi
 
-exec "$@"
+cd /home/runner
+exec ./run.sh

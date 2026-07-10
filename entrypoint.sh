@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-# Si hay un socket de Docker montado (contenedor dind sidecar), espera a que responda
 if [ -S /var/run/docker.sock ]; then
   echo "Esperando a que el daemon Docker (dind) este listo..."
   timeout=60

@@ -1,3 +1,4 @@
+# ---- Etapa de build: descarga runner, hooks, docker CLI y buildx ----
 FROM ubuntu:26.04 AS build
 
 ARG TARGETOS
@@ -31,17 +32,22 @@ RUN export RUNNER_ARCH=${TARGETARCH} \
        "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-${TARGETARCH}" \
     && chmod +x /usr/local/lib/docker/cli-plugins/docker-buildx
 
+# ---- Imagen final ----
 FROM ubuntu:26.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV RUNNER_MANUALLY_TRAP_SIG=1
 ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
 ENV ImageOS=ubuntu26
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 RUN apt update -y \
     && apt install -y --no-install-recommends \
-       sudo lsb-release gpg-agent software-properties-common curl jq unzip ca-certificates \
-       libicu-dev libssl-dev zlib1g tar gzip git-core \
+       sudo adduser lsb-release gpg-agent software-properties-common \
+       curl jq unzip ca-certificates tar gzip git-core locales \
+       libicu76 libssl3 zlib1g \
+    && locale-gen en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN adduser --disabled-password --gecos "" --uid 1001 runner \
@@ -49,7 +55,7 @@ RUN adduser --disabled-password --gecos "" --uid 1001 runner \
     && usermod -aG sudo runner \
     && usermod -aG docker runner \
     && echo "%sudo ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
-    && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers \
+    && echo 'Defaults env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers \
     && chmod 777 /home/runner
 
 WORKDIR /home/runner

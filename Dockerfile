@@ -46,7 +46,7 @@ RUN apt update -y \
     && apt install -y --no-install-recommends \
        sudo adduser lsb-release gpg-agent software-properties-common \
        curl jq unzip ca-certificates tar gzip git-core locales \
-       libicu76 libssl3 zlib1g \
+       libicu-dev libssl-dev zlib1g \
     && locale-gen en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/*
 

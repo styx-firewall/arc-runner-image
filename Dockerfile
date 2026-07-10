@@ -1,4 +1,3 @@
-# ---- Etapa de build: descarga runner, hooks, docker CLI y buildx ----
 FROM ubuntu:26.04 AS build
 
 ARG TARGETOS
@@ -32,8 +31,8 @@ RUN export RUNNER_ARCH=${TARGETARCH} \
        "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-${TARGETARCH}" \
     && chmod +x /usr/local/lib/docker/cli-plugins/docker-buildx
 
-# ---- Imagen final ----
-FROM ubuntu:26.04
+
+    FROM ubuntu:26.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV RUNNER_MANUALLY_TRAP_SIG=1

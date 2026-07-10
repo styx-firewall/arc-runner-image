@@ -65,6 +65,8 @@ RUN install -o root -g root -m 755 docker/* /usr/bin/ && rm -rf docker
 
 COPY --chown=runner:docker entrypoint.sh /home/runner/entrypoint.sh
 RUN chmod +x /home/runner/entrypoint.sh
+RUN cat -A /home/runner/entrypoint.sh | head -5
+RUN od -An -tx1 -N32 /home/runner/entrypoint.sh
 
 USER runner
 

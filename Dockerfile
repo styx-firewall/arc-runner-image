@@ -1,6 +1,6 @@
 FROM ubuntu:26.04 AS build
 
-# v17
+# test 2
 ARG TARGETOS
 ARG TARGETARCH
 ARG RUNNER_VERSION=2.334.0
@@ -65,15 +65,15 @@ COPY --chown=runner:docker --from=build /actions-runner .
 COPY --from=build /usr/local/lib/docker/cli-plugins/docker-buildx /usr/local/lib/docker/cli-plugins/docker-buildx
 RUN install -o root -g root -m 755 docker/* /usr/bin/ && rm -rf docker
 
-#TOTEST COPY --chown=runner:docker --chmod=755 entrypoint.sh /home/runner/entrypoint.sh
-COPY --chown=runner:docker entrypoint.sh /home/runner/entrypoint.sh
-RUN chmod +x /home/runner/entrypoint.sh
+COPY --chown=runner:docker --chmod=755 entrypoint.sh /home/runner/entrypoint.sh
+#COPY --chown=runner:docker entrypoint.sh /home/runner/entrypoint.sh
+3RUN chmod +x /home/runner/entrypoint.sh
 #TODO remove CRF/LF test
-RUN cat -A /home/runner/entrypoint.sh
-RUN od -An -tx1 -N32 /home/runner/entrypoint.sh
+#RUN cat -A /home/runner/entrypoint.sh
+#RUN od -An -tx1 -N32 /home/runner/entrypoint.sh
 
 USER runner
 
-ENTRYPOINT ["/home/runner/entrypoint.sh"]
-# TOTEST ENTRYPOINT ["/usr/bin/tini", "--", "/home/runner/entrypoint.sh"]
+#ENTRYPOINT ["/home/runner/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/home/runner/entrypoint.sh"]
 CMD ["/home/runner/run.sh"]

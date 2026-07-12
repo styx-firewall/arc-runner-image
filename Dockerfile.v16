@@ -1,6 +1,5 @@
 FROM ubuntu:26.04 AS build
 
-# v17
 ARG TARGETOS
 ARG TARGETARCH
 ARG RUNNER_VERSION=2.334.0
@@ -33,10 +32,8 @@ RUN export RUNNER_ARCH=${TARGETARCH} \
     && chmod +x /usr/local/lib/docker/cli-plugins/docker-buildx
 
 
-FROM ubuntu:26.04
+    FROM ubuntu:26.04
 
-ENV RUNNER_TOOL_CACHE=/opt/hostedtoolcache
-RUN mkdir -p /opt/hostedtoolcache && chown runner:docker /opt/hostedtoolcache
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
 ENV ImageOS=ubuntu26
@@ -47,7 +44,7 @@ RUN apt update -y \
     && apt install -y --no-install-recommends \
        sudo adduser lsb-release gpg-agent software-properties-common \
        curl jq unzip ca-certificates tar gzip git-core locales \
-       libicu-dev libssl-dev zlib1g tini\
+       libicu-dev libssl-dev zlib1g \
     && locale-gen en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/*
 
@@ -65,15 +62,12 @@ COPY --chown=runner:docker --from=build /actions-runner .
 COPY --from=build /usr/local/lib/docker/cli-plugins/docker-buildx /usr/local/lib/docker/cli-plugins/docker-buildx
 RUN install -o root -g root -m 755 docker/* /usr/bin/ && rm -rf docker
 
-#TOTEST COPY --chown=runner:docker --chmod=755 entrypoint.sh /home/runner/entrypoint.sh
 COPY --chown=runner:docker entrypoint.sh /home/runner/entrypoint.sh
 RUN chmod +x /home/runner/entrypoint.sh
-#TODO remove CRF/LF test
-RUN cat -A /home/runner/entrypoint.sh
+RUN cat -A /home/runner/entrypoint.sh | head -5
 RUN od -An -tx1 -N32 /home/runner/entrypoint.sh
 
 USER runner
 
 ENTRYPOINT ["/home/runner/entrypoint.sh"]
-# TOTEST ENTRYPOINT ["/usr/bin/tini", "--", "/home/runner/entrypoint.sh"]
 CMD ["/home/runner/run.sh"]

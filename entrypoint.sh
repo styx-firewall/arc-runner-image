@@ -2,17 +2,17 @@
 set -e
 
 if [ -S /var/run/docker.sock ]; then
-  echo "Esperando a que el daemon Docker (dind) este listo..."
+  echo "Waitong damon Docker (dind) ready..."
   timeout=60
   while ! docker info >/dev/null 2>&1; do
     timeout=$((timeout - 1))
     if [ "$timeout" -le 0 ]; then
-      echo "Docker no respondi a tiempo" >&2
+      echo "Docker timeout" >&2
       exit 1
     fi
     sleep 1
   done
-  echo "Docker listo."
+  echo "Docker ready."
 fi
 
 cd /home/runner

@@ -36,7 +36,7 @@ RUN export RUNNER_ARCH=${TARGETARCH} \
 FROM ubuntu:26.04
 
 ENV RUNNER_TOOL_CACHE=/opt/hostedtoolcache
-RUN mkdir -p /opt/hostedtoolcache && chown runner:docker /opt/hostedtoolcache
+
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
 ENV ImageOS=ubuntu26
@@ -58,6 +58,8 @@ RUN adduser --disabled-password --gecos "" --uid 1001 runner \
     && echo "%sudo ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
     && echo 'Defaults env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers \
     && chmod 777 /home/runner
+
+RUN mkdir -p /opt/hostedtoolcache && chown runner:docker /opt/hostedtoolcache
 
 WORKDIR /home/runner
 

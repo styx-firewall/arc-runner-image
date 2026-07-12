@@ -67,7 +67,7 @@ RUN install -o root -g root -m 755 docker/* /usr/bin/ && rm -rf docker
 
 COPY --chown=runner:docker --chmod=755 entrypoint.sh /home/runner/entrypoint.sh
 #COPY --chown=runner:docker entrypoint.sh /home/runner/entrypoint.sh
-3RUN chmod +x /home/runner/entrypoint.sh
+RUN chmod +x /home/runner/entrypoint.sh
 #TODO remove CRF/LF test
 #RUN cat -A /home/runner/entrypoint.sh
 #RUN od -An -tx1 -N32 /home/runner/entrypoint.sh
